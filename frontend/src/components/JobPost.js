@@ -37,7 +37,7 @@ function JobPost(props) {
 						</Card.Text>
 						<Card.Text className="text-xs text-gray-600 d-flex align-items-center">
 							<HiOutlineUsers className="me-2 fw-bold" /> Applicants:{" "}
-							{applicants}
+							{applicants.length}
 						</Card.Text>
 					</div>
 				</div>

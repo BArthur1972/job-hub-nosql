@@ -1,10 +1,11 @@
 const router = require("express").Router();
 const JobListing = require("../models/JobListing");
+const Company = require("../models/Company");
 
 // Get all job listings
 router.get("/", async (req, res) => {
 	try {
-		const jobListings = await JobListing.getAllJobListings();
+		const jobListings = await JobListing.find();
 		res.status(200).send(jobListings);
 	} catch (err) {
 		console.log("Error getting all job listings: ", err);
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
 // Get job listing by id
 router.get("/:jobID", async (req, res) => {
 	try {
-		const jobListing = await JobListing.getJobListingById(req.params.jobID);
+		const jobListing = await JobListing.findById(req.params._id);
 		res.status(200).send(jobListing);
 	} catch (err) {
 		console.log("Error getting job listing by id: ", err);
@@ -26,8 +27,9 @@ router.get("/:jobID", async (req, res) => {
 // Get job listings by company name
 router.get("/company/:companyName", async (req, res) => {
 	try {
-		const jobListings = await JobListing.getJobListingsByCompanyName(
-			req.params.companyName
+		const { companyName } = req.params;
+		const jobListings = await JobListing.find(
+			{ companyName: companyName }
 		);
 		res.status(200).send(jobListings);
 	} catch (err) {
@@ -66,7 +68,17 @@ router.get("/location/:location", async (req, res) => {
 // Create a new job listing
 router.post("/create", async (req, res) => {
 	try {
-		const jobListing = await JobListing.createJobListing(req.body);
+		const { jobID, jobTitle, companyID, location, postingDate, employmentType, skillsRequired, experienceRequired, qualificationsRequired, expirationDate, salary, jobDescription, recruiterID } = req.body;
+
+		const jobIDExists = await JobListing.findOne({ jobID });
+		if (jobIDExists) {
+			return res.status(400).send({ error: "Job ID is already taken." });
+		}
+
+		const companyName = await Company.findCompanyNameById(companyID);
+		console.log(companyName);
+		const jobListing = new JobListing({ jobID, jobTitle, companyID, companyName, location, postingDate, employmentType, skillsRequired, experienceRequired, qualificationsRequired, expirationDate, salary, jobDescription, recruiterID });
+		await jobListing.save();
 		res.status(200).send(jobListing);
 	} catch (err) {
 		console.log("Error creating job listing: ", err);
@@ -76,10 +88,14 @@ router.post("/create", async (req, res) => {
 
 // Get job listings by recruiter id
 router.get("/recruiter/:recruiterID", async (req, res) => {
+	console.log("Getting job listings by recruiter id");
 	try {
-		const jobListings = await JobListing.getJobListingsByRecruiterId(
-			req.params.recruiterID
+		console.log(req.params.recruiterID)
+		const { recruiterID } = req.params;
+		const jobListings = await JobListing.find(
+			{ recruiterID: recruiterID }
 		);
+
 		res.status(200).send(jobListings);
 	} catch (err) {
 		console.log("Error getting job listings by recruiter id: ", err);
@@ -91,7 +107,7 @@ router.get("/recruiter/:recruiterID", async (req, res) => {
 router.put("/update/", async (req, res) => {
 	try {
 		await JobListing.updateJobListingById(req.body.jobID, req.body);
-		res.status(200).send({message: "Job listing updated successfully"});
+		res.status(200).send({ message: "Job listing updated successfully" });
 	} catch (err) {
 		console.log("Error updating job listing by id: ", err);
 		res.status(500).send(err);
@@ -103,7 +119,7 @@ router.delete("/delete/", async (req, res) => {
 	try {
 		const { jobID, recruiterID } = req.body;
 		await JobListing.deleteJobListingById(jobID, recruiterID);
-		res.status(200).send({message: "Job listing deleted successfully"});
+		res.status(200).send({ message: "Job listing deleted successfully" });
 	} catch (err) {
 		console.log("Error deleting job listing by id: ", err);
 		res.status(500).send(err);

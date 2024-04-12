@@ -15,14 +15,14 @@ function JobPostings() {
     setSearchTerm(event.target.value);
   };
 
-  // Fetch applicants when the component mounts
+  // Fetch joblistings when the component mounts
 	useEffect(() => {
-		getJobListingsByRecruiterId(user.recruiterID)
+		getJobListingsByRecruiterId(user._id)
 			.then((response) => {
         console.log(response);
 				setJobListings(response.data);
 			});
-	}, [getJobListingsByRecruiterId, user.recruiterID]);
+	}, [getJobListingsByRecruiterId, user._id]);
 
   return (
     <Container fluid className="h-100 p-0 d-flex justify-content-center align-items-center">

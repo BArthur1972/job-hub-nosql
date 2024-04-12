@@ -20,6 +20,16 @@ CompanySchema.statics.findCompanyIdByName = async (companyName) => {
 	return company._id;
 }
 
+// Find company name by id
+CompanySchema.statics.findCompanyNameById = async (companyId) => {
+	const company = await Company.findOne({ _id: companyId });
+	if (!company) {
+		throw new Error('Company not found');
+	}
+
+	return company.companyName;
+}
+
 const Company = mongoose.model('Company', CompanySchema);
 
 module.exports = Company;
