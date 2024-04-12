@@ -93,33 +93,6 @@ const appApi = createApi({
             }),
         }),
 
-        // Add a job seeker education
-        addJobSeekerEducation: builder.mutation({
-            query: (payload) => ({
-                url: '/education/insert',
-                method: 'POST',
-                body: payload,
-            }),
-        }),
-
-        // Add a job seeker experience
-        addJobSeekerExperience: builder.mutation({
-            query: (payload) => ({
-                url: '/experience/insert',
-                method: 'POST',
-                body: payload,
-            }),
-        }),
-
-        // Add a job seeker skills
-        addJobSeekerSkills: builder.mutation({
-            query: (payload) => ({
-                url: '/skills/insert',
-                method: 'POST',
-                body: payload,
-            }),
-        }),
-
         // get all Job listings
         getAllJobListings: builder.mutation({
             query: () => ({
@@ -289,9 +262,6 @@ export const {
     useGetJobSeekerByIdMutation,
     useGetRecruiterByIdMutation,
     useUpdateJobSeekerMutation,
-    useAddJobSeekerEducationMutation,
-    useAddJobSeekerExperienceMutation,
-    useAddJobSeekerSkillsMutation,
     useGetAllJobListingsMutation,
     useCreateJobListingMutation,
     useGetAllJobSeekerEducationMutation,

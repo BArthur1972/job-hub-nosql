@@ -6,12 +6,13 @@ const jobSeekerAuth = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const jobSeeker = await JobSeeker.getJobSeekerById(decoded.id);
+        const jobSeeker = await JobSeeker.findOne({ _id: decoded._id, token });
 
         if (!jobSeeker) {
             throw new Error();
         }
 
+        req.token = token;
         req.jobSeeker = jobSeeker;
         next();
     } catch (err) {

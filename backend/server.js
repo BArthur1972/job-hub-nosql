@@ -1,11 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+require('./config/dbConnection');
 const jobSeekerRoutes = require('./routes/jobSeekerRoutes');
 const recruiterRoutes = require('./routes/recruiterRoutes');
 const companyRoutes = require('./routes/companyRoutes');
-const jobSeekerEducationRoutes = require('./routes/jobSeekerEducationRoutes');
-const jobSeekerExperienceRoutes = require('./routes/jobSeekerExperienceRoutes');
-const jobSeekerSkillRoutes = require('./routes/jobSeekerSkillRoutes');
 const jobListingRoutes = require('./routes/jobListingRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
 const app = express();
@@ -21,9 +19,6 @@ app.use(cors());
 app.use('/jobseeker', jobSeekerRoutes);
 app.use('/recruiter', recruiterRoutes);
 app.use('/company', companyRoutes);
-app.use('/education', jobSeekerEducationRoutes);
-app.use('/experience', jobSeekerExperienceRoutes);
-app.use('/skills', jobSeekerSkillRoutes);
 app.use('/joblisting', jobListingRoutes);
 app.use('/application', applicationRoutes);
 

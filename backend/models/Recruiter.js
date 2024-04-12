@@ -1,6 +1,5 @@
 const dbConnection = require('../config/dbConnection');
 const { isEmail } = require('validator');
-const Utils = require('./utils');
 const jwt = require('jsonwebtoken');
 
 class Recruiter {

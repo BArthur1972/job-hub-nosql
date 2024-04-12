@@ -1,5 +1,4 @@
 const dbConnection = require('../config/dbConnection');
-const Utils = require('./utils');
 const Company = require('./Company');
 const Application = require('./Application');
 
