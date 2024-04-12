@@ -32,8 +32,8 @@ function NewJobPosting() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        jobPost.companyID = user.companyID;
-        jobPost.recruiterID = user.recruiterID;
+        jobPost.companyID = user.companyId;
+        jobPost.recruiterID = user._id;
         await createJobListing(jobPost).then((response) => {
             if (response && response.data) {
                 console.log("Job posted successfully");
