@@ -3,19 +3,15 @@ import { Container, Row, Col, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Job from "../components/Job";
 import { useSelector } from "react-redux";
-import { useGetAllJobListingsMutation, useGetCompanyByIdMutation, useGetAllJobSeekerSkillsMutation, useGetAllJobSeekerExperienceMutation } from "../services/appApi";
+import { useGetAllJobListingsMutation, useGetCompanyByIdMutation } from "../services/appApi";
 
 function JobSeekerDashboard() {
 	const { user } = useSelector((state) => state.user);
 	const [jobList, setJobList] = useState([]);
-	const [skillsList, setSkillsList] = useState([]);
-	const [experienceList, setExperienceList] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const [getAllJobListing] = useGetAllJobListingsMutation();
 	const [getCompanyById] = useGetCompanyByIdMutation();
-	const [getJobSeekerSkills] = useGetAllJobSeekerSkillsMutation();
-	const [getJobSeekerExperience] = useGetAllJobSeekerExperienceMutation();
 
 	const fetchCompanyName = async (companyID) => {
 		try {
@@ -61,32 +57,8 @@ function JobSeekerDashboard() {
 			}
 		};
 
-		const fetchSkills = async () => {
-			try {
-				const response = await getJobSeekerSkills(user.seekerID);
-				if (response.data) {
-					setSkillsList(response.data);
-				}
-			} catch (error) {
-				console.error("Error fetching job seeker skills:", error);
-			}
-		}
-
-		const fetchExperience = async () => {
-			try {
-				const response = await getJobSeekerExperience(user.seekerID);
-				if (response.data) {
-					setExperienceList(response.data);
-				}
-			} catch (error) {
-				console.error("Error fetching job seeker experience:", error);
-			}
-		}
-
 		fetchJobs();
-		fetchSkills();
-		fetchExperience();
-	}, [getAllJobListing, getCompanyById, getJobSeekerSkills, getJobSeekerExperience, user.seekerID]);
+	}, [getAllJobListing, getCompanyById, user.seekerID]);
 
 	// Filter jobs based on skills, experience, or location
 	const filteredJobs = jobList.filter((job) => {
@@ -94,8 +66,8 @@ function JobSeekerDashboard() {
 		const jobTitle = job.jobTitle;
 		const jobLocations = job.locations.split(",");
 
-		const hasSkills = skillsList.some((skill) => jobSkills.includes(skill.skill));
-		const hasTitle = experienceList.some((experience) => jobTitle.includes(experience.role));
+		const hasSkills = user.skills.some((skill) => jobSkills.includes(skill.skill));
+		const hasTitle = user.experience.some((experience) => jobTitle.includes(experience.role));
 		const hasLocation = jobLocations.includes(user.location);
 
 		// Return jobs that match at least one skill, one experience level, or the location else return all jobs

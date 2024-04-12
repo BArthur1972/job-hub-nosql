@@ -6,7 +6,7 @@ const recruiterAuth = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const recruiter = await Recruiter.getRecruiterById(decoded.id);
+        const recruiter = await Recruiter.findOne({ _id: decoded._id, token });
 
         if (!recruiter) {
             throw new Error();

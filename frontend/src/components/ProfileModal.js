@@ -3,20 +3,14 @@ import styles from "./styles/applicantCard.module.css";
 import { Button, Modal } from 'react-bootstrap';
 import { Col, Row } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { useGetJobSeekerByIdMutation, useGetAllJobSeekerEducationMutation, useGetAllJobSeekerExperienceMutation, useGetAllJobSeekerSkillsMutation } from '../services/appApi';
+import { useGetJobSeekerByIdMutation } from '../services/appApi';
 import "./styles/ProfileModal.css";
 
 function ProfileModal(props) {
     const [show, setShow] = React.useState(false);
     const [jobSeeker, setJobSeeker] = useState([]);
-    const [educationList, setEducationList] = useState([]);
-    const [experienceList, setExperienceList] = useState([]);
-    const [skillsList, setSkillsList] = useState([]);
 
     const [getJobSeekerById] = useGetJobSeekerByIdMutation();
-    const [getJobSeekerEducation] = useGetAllJobSeekerEducationMutation();
-    const [getJobSeekerExperience] = useGetAllJobSeekerExperienceMutation();
-    const [getJobSeekerSkills] = useGetAllJobSeekerSkillsMutation();
 
     // Fetch the job seeker's education when the component mounts
     useEffect(() => {
@@ -24,32 +18,10 @@ function ProfileModal(props) {
             await getJobSeekerById(props.seekerID).then((response) => {
                 setJobSeeker(response.data[0]);
             });
-        }
-
-        const fetchEducation = async () => {
-            await getJobSeekerEducation(props.seekerID).then((response) => {
-                setEducationList(response.data);
-            });
-        }
-
-        const fetchExperience = async () => {
-            await getJobSeekerExperience(props.seekerID).then((response) => {
-                setExperienceList(response.data);
-                console.log(experienceList)
-            });
-        }
-
-        const fetchSkills = async () => {
-            await getJobSeekerSkills(props.seekerID).then((response) => {
-                setSkillsList(response.data);
-            });
-        }
+        } 
 
         fetchJobSeeker();
-        fetchEducation();
-        fetchExperience();
-        fetchSkills();
-    }, [getJobSeekerById, getJobSeekerEducation, getJobSeekerExperience, getJobSeekerSkills, props.seekerID]);
+    }, [getJobSeekerById, props.seekerID]);
 
     const formatDateAsMonthDayYear = (date) => {
         const formattedDate = new Date(date);
@@ -97,7 +69,7 @@ function ProfileModal(props) {
                             <div className='skills_box'>
                                 <h4>Skills</h4>
                                 <ul>
-                                    {skillsList.map((skill, index) => (
+                                    {jobSeeker.skills.map((skill, index) => (
                                         <li key={index}>{skill.skill}</li>
                                     ))}
                                 </ul>
@@ -106,7 +78,7 @@ function ProfileModal(props) {
                             {/* Box displaying the job seeker's education */}
                             <div className='education_box'>
                                 <h4>Education</h4>
-                                {educationList.map((education, index) => (
+                                {jobSeeker.education.map((education, index) => (
                                     <div key={index} className='education_item'>
                                         <ul>
                                             <li>{education.institution}</li>
@@ -122,7 +94,7 @@ function ProfileModal(props) {
                             <div className='experience_box'>
                                 <h4>Experience</h4>
                                 <div className='experience_item'>
-                                    {experienceList.map((experience, index) => (
+                                    {jobSeeker.experience.map((experience, index) => (
                                         <div key={index} className='experience_item'>
                                             <ul>
                                                 <li>{experience.role}</li>

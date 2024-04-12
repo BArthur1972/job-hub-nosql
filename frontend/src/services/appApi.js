@@ -109,14 +109,6 @@ const appApi = createApi({
             }),
         }),
 
-        // Get all job seeker education
-        getAllJobSeekerEducation: builder.mutation({
-            query: (id) => ({
-                url: `/education/getAll/${id}`,
-                method: 'GET',
-            }),
-        }),
-
         // create a new job listing
         createJobListing: builder.mutation({
             query: (payload) => ({
@@ -185,22 +177,6 @@ const appApi = createApi({
             }),
         }),
 
-        // Get all job seeker experience
-        getAllJobSeekerExperience: builder.mutation({
-            query: (id) => ({
-                url: `/experience/getAll/${id}`,
-                method: 'GET',
-            }),
-        }),
-
-        // Get all job seeker skills
-        getAllJobSeekerSkills: builder.mutation({
-            query: (id) => ({
-                url: `/skills/getAll/${id}`,
-                method: 'GET',
-            }),
-        }),
-
         // Get Applicants for all job listings by a recruiter
         getApplicantsByRecruiterId: builder.mutation({
             query: (id) => ({
@@ -264,9 +240,6 @@ export const {
     useUpdateJobSeekerMutation,
     useGetAllJobListingsMutation,
     useCreateJobListingMutation,
-    useGetAllJobSeekerEducationMutation,
-    useGetAllJobSeekerExperienceMutation,
-    useGetAllJobSeekerSkillsMutation,
     useGetCompanyByIdMutation,
     useGetAllApplicationsMutation,
     useGetApplicationsByJobSeekerIdMutation,

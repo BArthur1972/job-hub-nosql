@@ -35,8 +35,8 @@ router.post('/signup', async (req, res) => {
         if (jobSeekerExists) {
             return res.status(400).send({ error: "User already exists" });
         }
-        const { firstName, lastName, password, contactNumber, bio } = req.body;
-        const jobSeeker = new JobSeeker({ firstName, lastName, email, password, contactNumber, bio });
+        const { firstName, lastName, password, contactNumber, bio, profilePicture } = req.body;
+        const jobSeeker = new JobSeeker({ firstName, lastName, email, password, contactNumber, bio, profilePicture });
         const token = await jobSeeker.generateAuthToken(jobSeeker);
         await jobSeeker.save();
 
