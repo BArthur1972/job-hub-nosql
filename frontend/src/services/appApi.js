@@ -93,33 +93,6 @@ const appApi = createApi({
             }),
         }),
 
-        // Add a job seeker education
-        addJobSeekerEducation: builder.mutation({
-            query: (payload) => ({
-                url: '/education/insert',
-                method: 'POST',
-                body: payload,
-            }),
-        }),
-
-        // Add a job seeker experience
-        addJobSeekerExperience: builder.mutation({
-            query: (payload) => ({
-                url: '/experience/insert',
-                method: 'POST',
-                body: payload,
-            }),
-        }),
-
-        // Add a job seeker skills
-        addJobSeekerSkills: builder.mutation({
-            query: (payload) => ({
-                url: '/skills/insert',
-                method: 'POST',
-                body: payload,
-            }),
-        }),
-
         // get all Job listings
         getAllJobListings: builder.mutation({
             query: () => ({
@@ -133,14 +106,6 @@ const appApi = createApi({
             query: (id) => ({
                 url: `/company/company-id/${id}`,
                 method: "GET",
-            }),
-        }),
-
-        // Get all job seeker education
-        getAllJobSeekerEducation: builder.mutation({
-            query: (id) => ({
-                url: `/education/getAll/${id}`,
-                method: 'GET',
             }),
         }),
 
@@ -212,22 +177,6 @@ const appApi = createApi({
             }),
         }),
 
-        // Get all job seeker experience
-        getAllJobSeekerExperience: builder.mutation({
-            query: (id) => ({
-                url: `/experience/getAll/${id}`,
-                method: 'GET',
-            }),
-        }),
-
-        // Get all job seeker skills
-        getAllJobSeekerSkills: builder.mutation({
-            query: (id) => ({
-                url: `/skills/getAll/${id}`,
-                method: 'GET',
-            }),
-        }),
-
         // Get Applicants for all job listings by a recruiter
         getApplicantsByRecruiterId: builder.mutation({
             query: (id) => ({
@@ -289,14 +238,8 @@ export const {
     useGetJobSeekerByIdMutation,
     useGetRecruiterByIdMutation,
     useUpdateJobSeekerMutation,
-    useAddJobSeekerEducationMutation,
-    useAddJobSeekerExperienceMutation,
-    useAddJobSeekerSkillsMutation,
     useGetAllJobListingsMutation,
     useCreateJobListingMutation,
-    useGetAllJobSeekerEducationMutation,
-    useGetAllJobSeekerExperienceMutation,
-    useGetAllJobSeekerSkillsMutation,
     useGetCompanyByIdMutation,
     useGetAllApplicationsMutation,
     useGetApplicationsByJobSeekerIdMutation,

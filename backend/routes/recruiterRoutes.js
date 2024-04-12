@@ -6,7 +6,7 @@ const auth = require('../middleware/recruiterAuth');
 // Get all recruiters
 router.get('/', async (req, res) => {
     try {
-        const recruiters = await Recruiter.getAllRecruiters();
+        const recruiters = await Recruiter.find();
         res.status(200).send(recruiters);
         console.log(recruiters);
     } catch (err) {
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 router.get('/:recruiterID', async (req, res) => {
     try {
         const { recruiterID } = req.params;
-        const recruiter = await Recruiter.getRecruiterById(recruiterID);
+        const recruiter = await Recruiter.findById(recruiterID);
         res.status(200).send(recruiter);
         console.log(recruiter);
     } catch (err) {
@@ -31,17 +31,33 @@ router.get('/:recruiterID', async (req, res) => {
 // Signup a new recruiter
 router.post('/signup', async (req, res) => {
     try {
-        const getCompanyByName = await Company.getCompanyByName(req.body.companyName);
-        req.body.companyID = getCompanyByName[0].companyID;
-        delete req.body.companyName;
-        console.log(req.body);
-        const recruiter = await Recruiter.signupRecruiter(req.body);
-        const recruiterWithToken = await Recruiter.generateAuthTokenAndAddToRecruiter(recruiter);
-        console.log({user:recruiterWithToken, token:recruiterWithToken.token});
-        res.status(200).send({user: recruiterWithToken, token: recruiterWithToken.token});
+        const { email, password, firstName, lastName, companyName, bio, contactNumber, profilePicture } = req.body;
+
+        const recruiterExists = await Recruiter.findOne({ email });
+        if (recruiterExists) {
+            return res.status(400).send({error: "User already exists"});
+        }
+
+        const companyId = await Company.findCompanyIdByName(companyName);
+        const companyExists = await Company.findOne({ _id: companyId});
+        if (!companyExists) {
+            return res.status(400).send({error: "Company does not exist. Please make sure your company is registered as a partner with us."});
+        }
+
+        const recruiter = new Recruiter({ firstName, lastName, email, password, contactNumber, bio, profilePicture, companyId });
+        const token = await recruiter.generateAuthToken();
+        await recruiter.save();
+
+        res.status(200).send({user: recruiter, token: token});
     } catch (err) {
-        console.log("Error signing up recruiter: ", err);
-        res.status(500).send({error: err});
+        let msg;
+        if (err.code == 11000) {
+            msg = "User already exists";
+        } else {
+            msg = e.message;
+        }
+        console.log(err);
+        res.status(400).send({ error: msg });
     }
 });
 
@@ -49,21 +65,22 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        const recruiter = await Recruiter.loginRecruiter(email, password);
-        const recruiterWithToken = await Recruiter.generateAuthTokenAndAddToRecruiter(recruiter);
-        console.log({user:recruiterWithToken, token:recruiterWithToken.token});
-        res.status(200).send({user: recruiterWithToken, token: recruiterWithToken.token});
+        const recruiter = await Recruiter.findByCredentials(email, password);
+        const token = await recruiter.generateAuthToken();
+        res.status(200).send({user: recruiter, token: token});
     } catch (err) {
         console.log("Error logging in recruiter: ", err);
-        res.status(500).send({error: err});
+        res.status(500).send({ error: err.message });
     }
 });
 
 // Logout a recruiter
 router.post('/logout/', auth, async (req, res) => {
     try {
-        const { recruiterID } = req.body;
-        await Recruiter.logoutRecruiter(recruiterID);
+        const { _id } = req.body;
+        const recruiter = await Recruiter.findById(_id);
+        recruiter.token = "";
+        await recruiter.save();
         res.status(200).send({data: "Recruiter logged out successfully"});
     } catch (err) {
         console.log("Error logging out recruiter: ", err);

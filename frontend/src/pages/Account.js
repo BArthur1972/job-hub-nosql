@@ -3,7 +3,6 @@ import { Container, Row } from 'react-bootstrap';
 import './styles/Account.css';
 import defaultProfilePic from '../assets/defaultProfilePic.jpg';
 import { useSelector } from 'react-redux';
-import { useGetAllJobSeekerEducationMutation, useGetAllJobSeekerExperienceMutation, useGetAllJobSeekerSkillsMutation } from '../services/appApi';
 
 function AccountHeader({ userName }) {
 	return (
@@ -103,30 +102,6 @@ function JobSeekerInfo({ skillsList, educationList, experienceList }) {
 
 function Account() {
 	const { user, userRole } = useSelector((state) => state.user);
-	const [educationList, setEducationList] = useState([]);
-	const [experienceList, setExperienceList] = useState([]);
-	const [skillsList, setSkillsList] = useState([]);
-
-	const [getJobSeekerEducation] = useGetAllJobSeekerEducationMutation();
-	const [getJobSeekerExperience] = useGetAllJobSeekerExperienceMutation();
-	const [getJobSeekerSkills] = useGetAllJobSeekerSkillsMutation();
-
-	useEffect(() => {
-		const fetchData = async () => {
-			if (userRole === 'jobseeker') {
-				const educationResponse = await getJobSeekerEducation(user.seekerID);
-				setEducationList(educationResponse.data);
-
-				const experienceResponse = await getJobSeekerExperience(user.seekerID);
-				setExperienceList(experienceResponse.data);
-
-				const skillsResponse = await getJobSeekerSkills(user.seekerID);
-				setSkillsList(skillsResponse.data);
-			}
-		};
-
-		fetchData();
-	}, [getJobSeekerEducation, getJobSeekerExperience, getJobSeekerSkills, user.seekerID, userRole]);
 
 	return (
 		<Container className="account__container">
@@ -142,9 +117,9 @@ function Account() {
 					<div className="account__divider" />
 					<Row>
 						<JobSeekerInfo
-							skillsList={skillsList}
-							educationList={educationList}
-							experienceList={experienceList}
+							skillsList={user.skills}
+							educationList={user.education}
+							experienceList={user.experience}
 						/>
 					</Row>
 				</>

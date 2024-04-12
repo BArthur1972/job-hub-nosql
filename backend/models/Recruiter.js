@@ -1,154 +1,99 @@
-const dbConnection = require('../config/dbConnection');
+const mongoose = require('mongoose');
 const { isEmail } = require('validator');
-const Utils = require('./utils');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-class Recruiter {
-    // Get recruiter by id
-    static getRecruiterById(recruiterId) {
-        return new Promise((resolve, reject) => {
-            const query = `SELECT * FROM Recruiter WHERE recruiterID = ${recruiterId}`;
-            console.log(query);
-            dbConnection.query(query, (err, result) => {
-                if (err) {
-                    reject(err.sqlMessage);
-                } else {
-                    // Remove password and return the recruiter
-                    delete result[0].password;
-                    const recruiterJSON = Utils.toJSON(result);
-                    resolve(recruiterJSON);
-                }
-            });
-        });
+const RecruiterSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
+        validate: [isEmail, 'Invalid email']
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    contact: {
+        type: String,
+    },
+    bio: {
+        type: String,
+    },
+    profilePicture: {
+        type: String,
+    },
+    companyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Company',
+    },
+    token: {
+        type: String,
+    },
+});
+
+// Hash the password before a recruiter is saved
+RecruiterSchema.pre('save', function (next) {
+    const recruiter = this;
+    if (!recruiter.isModified('password')) {
+        return next();
     }
 
-    // Get all recruiters
-    static getAllRecruiters() {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM Recruiter';
-            dbConnection.query(query, (err, result) => {
-                if (err) {
-                    reject(err.sqlMessage);
-                } else {
-                    const recruitersWithoutPassword = Utils.removePasswords(result);
-                    const recruitersJSON = Utils.toJSON(recruitersWithoutPassword);
-                    resolve(recruitersJSON);
-                }
-            });
-        });
-    }
-
-    static signupRecruiter(recruiter) {
-        return new Promise((resolve, reject) => {
-            if (!isEmail(recruiter.email)) {
-                reject('Invalid email');
-            } else {
-                // Hash password
-                Utils.hashPassword(recruiter.password)
-                    .then((hashedPassword) => {
-                        const query = `INSERT INTO Recruiter (firstName, lastName, email, password, contactNumber, bio, profilePicture, companyID) 
-                                VALUES ('${recruiter.firstName}', '${recruiter.lastName}', '${recruiter.email}', '${hashedPassword}', '${recruiter.contactNumber}', '${recruiter.bio}', '${recruiter.profilePicture}', ${recruiter.companyID})`;
-                        dbConnection.query(query, recruiter, (err, result) => {
-                            if (err) {
-                                console.log("Error inserting recruiter: ", err);
-                                reject(err.sqlMessage);
-                            } else {
-                                // Get the newly created recruiter and return it
-                                console.log(result);
-                                const recruiterId = result.insertId;
-                                this.getRecruiterById(recruiterId).then((recruiter) => {
-                                    resolve(recruiter[0]);
-                                }).catch((err) => {
-                                    reject(err);
-                                });
-                            }
-                        });
-                    })
-                    .catch((err) => {
-                        console.log('Error hashing password: ', err);
-                        reject(err);
-                    });
+    bcrypt.genSalt(10, (err, salt) => {
+        if (err) {
+            return next(err);
+        }
+        bcrypt.hash(recruiter.password, salt, (err, hash) => {
+            if (err) {
+                return next(err);
             }
+            recruiter.password = hash;
+            next();
         });
+    });
+});
+
+// Send response back as JSON without the password
+RecruiterSchema.methods.toJSON = function () {
+    const recruiter = this;
+    const recruiterObject = recruiter.toObject();
+    delete recruiterObject.password;
+    return recruiterObject;
+};
+
+// Find a recruiter by email and password
+RecruiterSchema.statics.findByCredentials = async (email, password) => {
+    const recruiter = await Recruiter.findOne({ email });
+    if (!recruiter) {
+        throw new Error('Invalid email or password');
     }
 
-    // Login a recruiter
-    static loginRecruiter(email, password) {
-        return new Promise((resolve, reject) => {
-            if (!isEmail(email)) {
-                reject('Invalid email');
-            }
-            this.getUserByCredentials(email, password).then((recruiter) => {
-                resolve(recruiter);
-            }).catch((err) => {
-                reject(err);
-            });
-
-        });
+    const isMatch = await bcrypt.compare(password, recruiter.password);
+    if (!isMatch) {
+        throw new Error('Invalid email or password');
     }
+    return recruiter;
+};
 
+// Generate an auth token for the recruiter
+RecruiterSchema.methods.generateAuthToken = async function () {
+    const recruiter = this;
+    const token = jwt.sign({ _id: recruiter._id }, process.env.JWT_SECRET, { expiresIn: '7 days' });
+    recruiter.token = token;
+    await recruiter.save();
+    return token;
+};
 
-    // Logout a recruiter. Remove the token for that recruiter from the database and return a success message.
-    static logoutRecruiter(recruiterId) {
-        return new Promise((resolve, reject) => {
-            const query = `UPDATE Recruiter SET token = NULL WHERE recruiterID = ${recruiterId}`;
-            dbConnection.query(query, (err, result) => {
-                if (err) {
-                    reject(err.sqlMessage);
-                } else {
-                    resolve('Recruiter logged out successfully');
-                }
-            });
-        });
-    }
-
-
-    // Get a recruiter by email and password from the database and return the recruiter if found
-    static getUserByCredentials = async function (email, password) {
-        const query = `SELECT * FROM Recruiter WHERE email = '${email}'`;
-        return new Promise((resolve, reject) => {
-            dbConnection.query(query, async (err, result) => {
-                if (err) {
-                    reject(err.sqlMessage);
-                } else {
-                    if (result.length === 0) {
-                        reject('No recruiter found with that email');
-                    } else {
-                        const recruiter = result[0];
-                        const isMatch = await Utils.comparePassword(password, recruiter.password);
-                        if (isMatch) {
-                            delete recruiter.password;
-                            resolve(Utils.toJSON(recruiter));
-                        } else {
-                            reject('Incorrect password');
-                        }
-                    }
-                }
-            });
-        });
-    }
-
-    // Generate an auth token for a recruiter and add it to the database
-    static generateAuthTokenAndAddToRecruiter(recruiter) {
-        return new Promise((resolve, reject) => {
-            console.log("Recruiter object in generateAuthTokenAndAddToRecruiter: ", recruiter);
-            const token = jwt.sign({ id: recruiter.recruiterID }, process.env.JWT_SECRET);
-            const query = `UPDATE Recruiter SET token = '${token}' WHERE recruiterID = ${recruiter.recruiterID}`;
-            dbConnection.query(query, (err, result) => {
-                if (err) {
-                    reject(err.sqlMessage);
-                } else {
-                    // Get the user again and return it
-                    this.getRecruiterById(recruiter.recruiterID).then((recruiter) => {
-                        console.log("Recruiter after generating token: ", recruiter);
-                        resolve(recruiter[0]);
-                    }).catch((err) => {
-                        reject(err);
-                    });
-                }
-            });
-        });
-    }
-}
+const Recruiter = mongoose.model('Recruiter', RecruiterSchema);
 
 module.exports = Recruiter;

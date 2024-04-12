@@ -7,7 +7,7 @@ import { skillList } from './data/skills';
 import { disciplines } from './data/disciplines';
 import { locations } from './data/locations';
 import { useSelector } from 'react-redux';
-import { useUpdateJobSeekerMutation, useAddJobSeekerEducationMutation, useAddJobSeekerExperienceMutation, useAddJobSeekerSkillsMutation } from '../services/appApi';
+import { useUpdateJobSeekerMutation } from '../services/appApi';
 
 function AdditionalInfo() {
     const { user } = useSelector((state) => state.user);
@@ -23,9 +23,6 @@ function AdditionalInfo() {
     const navigate = useNavigate();
 
     const [updateJobSeeker] = useUpdateJobSeekerMutation();
-    const [addJobSeekerEducation] = useAddJobSeekerEducationMutation();
-    const [addJobSeekerExperience] = useAddJobSeekerExperienceMutation();
-    const [addJobSeekerSkills] = useAddJobSeekerSkillsMutation();
 
     // Function to add another education info section
     const addEducationInfo = () => {
@@ -90,85 +87,53 @@ function AdditionalInfo() {
         }
     };
 
-    const updateJobSeekerEducationHandler = async (educations) => {
-        // Add the education info
-        educations.forEach(async (educationInfo) => {
-            try {
-                await addJobSeekerEducation({ seekerID: user.seekerID, educationInfo }).then((response) => {
-                    if (response && response.data) {
-                        console.log("Job Seeker education added successfully: ", response.data);
-                    } else {
-                        console.log("Error adding job seeker education: ", response.error);
-                    }
-                });
-            } catch (err) {
-                console.log("Error adding job seeker education: ", err);
-            }
-        });
-    };
-
-    const updateJobSeekerExperienceHandler = async (experiences) => {
-        // Add the experience info
-        experiences.forEach(async (experienceInfo) => {
-            try {
-                await addJobSeekerExperience({ seekerID: user.seekerID, experienceInfo }).then((response) => {
-                    if (response && response.data) {
-                        console.log("Job Seeker experience added successfully: ", response.data);
-                    } else {
-                        console.log("Error adding job seeker experience: ", response.error);
-                    }
-                });
-            } catch (err) {
-                console.log("Error adding job seeker experience: ", err);
-            }
-        });
-    };
-
-    const updateJobSeekerSkillsHandler = async (listOfSkills) => {
-        // Add the skills
-        listOfSkills.forEach(async (skill) => {
-            try {
-                await addJobSeekerSkills({ seekerID: user.seekerID, skill }).then((response) => {
-                    if (response && response.data) {
-                        console.log("Job Seeker skill added successfully: ", response.data);
-                    } else {
-                        console.log("Error adding job seeker skill: ", response.error);
-                    }
-                });
-            } catch (err) {
-                console.log("Error adding job seeker skill: ", err);
-            }
-        });
-    };
-
     // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (location !== "") {
-            await updateJobSeekerHandler({ seekerID: user.seekerID, location: location });
+        // Check if all required fields are filled
+        if (!location
+            || educationInfoList.some(info => !info.school || !info.degree || !info.discipline || !info.startYear)
+            || experienceInfoList.some(info => !info.company || !info.role || !info.startDate)
+            || !skills.length
+        ) {
+            alert("Please fill out all required fields.");
+            return;
         }
 
-        if (educationInfoList[0].school !== "" && educationInfoList[0].degree !== "" && educationInfoList[0].discipline !== "" && educationInfoList[0].startYear !== 0) {
-            educationInfoList.forEach((educationInfo) => {
-                if (educationInfo.endYear === 0) {
-                    educationInfo.endYear = "Present";
-                }
-            });
-            await updateJobSeekerEducationHandler(educationInfoList);
-        }
+        // Prepare the education and experience info
+        const educationList = educationInfoList.map(info => ({
+            school: info.school,
+            degree: info.degree,
+            discipline: info.discipline,
+            startYear: info.startYear,
+            endYear: info.endYear
+        }));
 
-        if (experienceInfoList[0].company !== "" && experienceInfoList[0].role !== "" && experienceInfoList[0].startDate !== "") {
-            experienceInfoList.forEach((experienceInfo) => {
-                if (experienceInfo.endDate === "") {
-                    experienceInfo.endDate = "Present";
-                }
-            });
-            await updateJobSeekerExperienceHandler(experienceInfoList);
-        }
+        const experienceList = experienceInfoList.map(info => ({
+            company: info.company,
+            role: info.role,
+            startDate: info.startDate,
+            endDate: info.endDate
+        }));
 
-        if (skills.length !== 0) {
-            await updateJobSeekerSkillsHandler(skills);
+        // Prepare the fields to update
+        const fields = {
+            seekerID: user._id,
+            educationList,
+            experienceList,
+            location,
+            skills
+        };
+
+        // Update the job seeker
+        try {
+            const response = await updateJobSeekerHandler(fields);
+            if (response && response.data) {
+                console.log("Job Seeker updated successfully: ", response.data);
+            }
+        } catch (err) {
+            console.log("Error updating job seeker: ", err);
         }
 
         navigate("/jobseekerdashboard", { replace: true });

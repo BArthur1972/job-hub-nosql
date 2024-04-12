@@ -1,5 +1,4 @@
 const dbConnection = require("../config/dbConnection");
-const Utils = require("./utils");
 const JobSeeker = require("./JobSeeker");
 
 class Application {
