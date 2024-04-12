@@ -18,7 +18,7 @@ function UserInfo({ user }) {
 			<div className="account__user-image">
 				<img
 					alt=""
-					src={user.profilePicture || defaultProfilePic}
+					src={user ? user.profilePicture : defaultProfilePic}
 					className="account__user-image-preview"
 				/>
 				<div className="account__user-image-change">
@@ -29,20 +29,20 @@ function UserInfo({ user }) {
 				<div className="account__user-name">
 					<p className="account__user-name-label">Username:</p>
 					<p className="account__user-name-value">
-						{user.firstName || 'N/A'} {user.lastName || 'N/A'}
+						{user ? user.firstName : 'N/A'} {user ? user.lastName : 'N/A'}
 					</p>
 				</div>
 				<div className="account__user-email">
 					<p className="account__user-email-label">Email:</p>
-					<p className="account__user-email-value">{user.email || 'N/A'}</p>
+					<p className="account__user-email-value">{user ? user.email : 'N/A'}</p>
 				</div>
 				<div className="account__user-phone">
 					<p className="account__user-phone-label">Phone:</p>
-					<p className="account__user-phone-value">{user.contactNumber || 'N/A'}</p>
+					<p className="account__user-phone-value">{user ? user.contactNumber : 'N/A'}</p>
 				</div>
 				<div className="account__user-bio">
 					<p className="account__user-bio-label">Bio:</p>
-					<p className="account__user-bio-value">{user.bio || 'N/A'}</p>
+					<p className="account__user-bio-value">{user ? user.bio : 'N/A'}</p>
 				</div>
 			</div>
 		</div>
@@ -62,7 +62,7 @@ function JobSeekerInfo({ skillsList, educationList, experienceList }) {
 				<ul className="account__skills-list">
 					{skillsList.map((skill, index) => (
 						<li key={index} className="account__skills-item">
-							{skill.skill}
+							{skill}
 						</li>
 					))}
 				</ul>
@@ -106,7 +106,7 @@ function Account() {
 	return (
 		<Container className="account__container">
 			<Row>
-				<AccountHeader userName={user.firstName} />
+				<AccountHeader userName={user ? user.firstName : "N/A"} />
 				<div className="account__divider" />
 			</Row>
 			<Row>

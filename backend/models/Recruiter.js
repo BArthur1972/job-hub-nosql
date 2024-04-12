@@ -23,7 +23,7 @@ const RecruiterSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    contact: {
+    contactNumber: {
         type: String,
     },
     bio: {
