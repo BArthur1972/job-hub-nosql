@@ -221,7 +221,7 @@ const appApi = createApi({
         // Get number of applicants for all job listings by a recruiter
         getNumberOfApplicantsByRecruiterId: builder.mutation({
             query: (id) => ({
-                url: `/application/count/${id}`,
+                url: `/applicant/count/${id}`,
                 method: 'GET',
             }),
         }),

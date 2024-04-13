@@ -24,7 +24,6 @@ function JobPostings() {
 	useEffect(() => {
 		getJobListingsByRecruiterId(user._id)
 			.then((response) => {
-        console.log(response);
 				setJobListings(response.data);
 			});
 	}, [getJobListingsByRecruiterId, user._id]);
