@@ -1,39 +1,54 @@
 .card {
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-  }
-  
-  .card:hover {
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-  }
-  
-  .name {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #374151;
-  }
-  
-  .jobTitle,
-  .location,
-  .email,
-  .jobID {
-    font-size: 0.875rem;
-    color: #6b7280;
-    font-weight: bold;
-  }
-  
-  .button {
-    font-weight: 600;
-  }
-  
-  .statusSelect {
-    font-size: 0.875rem;
-    color: #374151;
-    border-color: #e5e7eb;
-  }
-  
-  .statusIcon {
-    font-size: 1.25rem;
-  }
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.name {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #1b1f25;
+}
+
+.jobTitle,
+.location,
+.email,
+.jobID {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: bold;
+}
+
+.button {
+  font-weight: 600;
+}
+
+.statusSelect {
+  font-size: 0.875rem;
+  color: #374151;
+  border-color: #e5e7eb;
+}
+
+.icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  vertical-align: middle;
+  color: black;
+}
+
+.statusIcon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+.statusIcon>svg {
+  vertical-align: middle;
+}
