@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const JobListing = require("../models/JobListing");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Get all applications with job listing details
 router.get("/", async (req, res) => {
@@ -87,9 +87,12 @@ router.post("/create", async (req, res) => {
     // Extract the jobID and seekerID from the request body
     const { jobID, seekerID } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(jobID) || !mongoose.Types.ObjectId.isValid(seekerID)) {
-        console.log("Invalid jobID or seekerID");
-        return res.status(400).json({ message: "Invalid jobID or seekerID" });
+    if (
+      !mongoose.Types.ObjectId.isValid(jobID) ||
+      !mongoose.Types.ObjectId.isValid(seekerID)
+    ) {
+      console.log("Invalid jobID or seekerID");
+      return res.status(400).json({ message: "Invalid jobID or seekerID" });
     }
 
     // Find the job listing by ID

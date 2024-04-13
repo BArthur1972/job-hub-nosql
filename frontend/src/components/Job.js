@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
 
-const Job = ({ jobID, companyName, jobTitle, experienceLevels, locations, postedDate, jobType, skills, salary, description }) => {
+const Job = ({id, jobID, companyName, jobTitle, experienceLevels, locations, postedDate, jobType, skills, salary, description }) => {
     const generateLogoUrl = (companyName) => {
         return `https://logo.clearbit.com/${companyName.toLowerCase().replace(/\s+/g, "")}.com?size=70`;
     };
@@ -22,12 +22,10 @@ const Job = ({ jobID, companyName, jobTitle, experienceLevels, locations, posted
     const handleApply = async () => {
         const application = {
             seekerID: user._id,
-            jobID: jobID,
+            jobID: id,
             status: "Applied",
             dateApplied: currentDate,
         };
-        console.log(user._id, "user._id");
-        console.log(jobID, "jobID");
 
         await createApplication(application).then((response) => {
             console.log(response, "response");
@@ -38,7 +36,7 @@ const Job = ({ jobID, companyName, jobTitle, experienceLevels, locations, posted
             } else if (response.error) {
                 console.log("Error submitting application");
                 console.log(response.error);
-                alert(response.error.data.error);
+                alert(response.error.data);
             }
         });
     };
