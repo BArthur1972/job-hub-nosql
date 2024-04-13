@@ -14,15 +14,15 @@ function RecruiterDashboard() {
 	const [getNumberOfApplicantsByRecruiterId] = useGetNumberOfApplicantsByRecruiterIdMutation();
 
 	useEffect(() => {
-		getNumberOfJobListingsByRecruiterId(user.recruiterID)
+		getNumberOfJobListingsByRecruiterId(user._id)
 			.then((response) => {
 				setNumberOfJobListings(response.data.count);
 			});
-		getNumberOfApplicantsByRecruiterId(user.recruiterID)
+		getNumberOfApplicantsByRecruiterId(user._id)
 			.then((response) => {
 				setNumberOfApplicants(response.data.count);
 			});
-	}, [getNumberOfApplicantsByRecruiterId, getNumberOfJobListingsByRecruiterId, user.recruiterID]);
+	}, [getNumberOfApplicantsByRecruiterId, getNumberOfJobListingsByRecruiterId, user._id]);
 
 	return (
 		<Container className="flex justify-content-center align-items-center p-4 mt-5">

@@ -127,11 +127,12 @@ router.delete("/delete/", async (req, res) => {
 // Get number of job listings for a specific recruiter by recruiterID
 router.get("/count/:recruiterID", async (req, res) => {
 	try {
-		const count = await JobListing.getNumberOfJobListingsByRecruiterId(req.params.recruiterID);
-		res.status(200).send(count);
+		const { recruiterID } = req.params;
+		const count = await JobListing.countDocuments({ recruiterID });
+		res.status(200).send({count: count});
 	} catch (err) {
 		console.log("Error getting number of job listings by recruiter id: ", err);
-		res.status(500).send(err);
+		res.status(500).send({error: err});
 	}
 });
 
