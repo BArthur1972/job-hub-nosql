@@ -4,6 +4,7 @@ import { Button, Modal, Image } from 'react-bootstrap';
 import { Col, Row } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useGetJobSeekerByIdMutation } from '../services/appApi';
+import defaultProfilePicture from "../assets/defaultProfilePic.jpg";
 import "./styles/ProfileModal.css";
 
 function ProfileModal(props) {
@@ -55,7 +56,7 @@ function ProfileModal(props) {
                 </Modal.Header>
                 <Modal.Body>
                     <div className='profile_picture_container'>
-                        <Image src={jobSeeker.profilePicture} roundedCircle className='profile_picture' />
+                        <Image src={jobSeeker.profilePicture !== "" ? jobSeeker.profilePicture : defaultProfilePicture} roundedCircle className='profile_picture' />
                     </div>
                     <Row className='jobseeker_info'>
                         <Col md={4} className='jobseeker_info_box'>

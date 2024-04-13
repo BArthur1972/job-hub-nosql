@@ -14,6 +14,7 @@ router.get("/getAll/:recruiterID", async (req, res) => {
                 ...applicant,
                 location: jobListing.location,
                 jobID: jobListing.jobID,
+                jobTitle: jobListing.jobTitle,
             })));
         }
         );
