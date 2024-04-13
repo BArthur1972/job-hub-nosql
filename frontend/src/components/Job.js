@@ -5,9 +5,10 @@ import JobDetailsModal from "../components/JobDetailsModal";
 import { useCreateApplicationMutation } from "../services/appApi";
 import { useSelector } from "react-redux";
 
+
 const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
 
-const Job = ({ jobID, companyName, jobTitle, experienceLevels, locations, postedDate, jobType, skills, salary, description }) => {
+const Job = ({id, jobID, companyName, jobTitle, experienceLevels, locations, postedDate, jobType, skills, salary, description }) => {
     const generateLogoUrl = (companyName) => {
         return `https://logo.clearbit.com/${companyName.toLowerCase().replace(/\s+/g, "")}.com?size=70`;
     };
@@ -20,12 +21,14 @@ const Job = ({ jobID, companyName, jobTitle, experienceLevels, locations, posted
 
     const handleApply = async () => {
         const application = {
-            seekerID: user.seekerID,
-            jobID: jobID,
+            seekerID: user._id,
+            jobID: id,
             status: "Applied",
             dateApplied: currentDate,
         };
+
         await createApplication(application).then((response) => {
+            console.log(response, "response");
             if (response && response.data) {
                 console.log("Application submitted successfully");
                 console.log(response.data);
@@ -33,7 +36,7 @@ const Job = ({ jobID, companyName, jobTitle, experienceLevels, locations, posted
             } else if (response.error) {
                 console.log("Error submitting application");
                 console.log(response.error);
-                alert(response.error.data.error);
+                alert(response.error.data);
             }
         });
     };

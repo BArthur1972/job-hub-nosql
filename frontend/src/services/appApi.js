@@ -121,7 +121,7 @@ const appApi = createApi({
         // get all applications
         getAllApplications: builder.mutation({
             query: () => ({
-                url: "/application/",
+                url: "/applicant/",
                 method: "GET",
             }),
         }),
@@ -129,7 +129,7 @@ const appApi = createApi({
         // get applications by job seeker id
         getApplicationsByJobSeekerId: builder.mutation({
             query: (id) => ({
-                url: `/application/seeker/${id}`,
+                url: `/applicant/seeker/${id}`,
                 method: "GET",
             }),
         }),
@@ -137,7 +137,7 @@ const appApi = createApi({
         // get applications by job listing id
         getApplicationsByJobListingId: builder.mutation({
             query: (id) => ({
-                url: `/application/listing/${id}`,
+                url: `/applicant/listing/${id}`,
                 method: "GET",
             }),
         }),
@@ -145,7 +145,7 @@ const appApi = createApi({
         // get applications by status
         getApplicationsByStatus: builder.mutation({
             query: (status) => ({
-                url: `/application/${status}`,
+                url: `/applicant/${status}`,
                 method: "GET",
             }),
         }),
@@ -153,7 +153,7 @@ const appApi = createApi({
         // create a new application
         createApplication: builder.mutation({
             query: (payload) => ({
-                url: "/application/create",
+                url: "/applicant/create",
                 method: "POST",
                 body: payload,
             }),
@@ -162,7 +162,7 @@ const appApi = createApi({
         // update an application
         updateApplication: builder.mutation({
             query: (payload) => ({
-                url: "/application/update",
+                url: "/applicant/update",
                 method: "PUT",
                 body: payload,
             }),
@@ -171,7 +171,7 @@ const appApi = createApi({
         // delete an application
         deleteApplication: builder.mutation({
             query: (payload) => ({
-                url: "/application/delete",
+                url: "/applicant/delete",
                 method: "DELETE",
                 body: payload,
             }),
@@ -180,7 +180,7 @@ const appApi = createApi({
         // Get Applicants for all job listings by a recruiter
         getApplicantsByRecruiterId: builder.mutation({
             query: (id) => ({
-                url: `/application/applicants/${id}`,
+                url: `/applicant/applicants/${id}`,
                 method: 'GET',
             }),
         }),

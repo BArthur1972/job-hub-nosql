@@ -67,7 +67,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Logout a job seeker
-router.post('/logout/', auth, async (req, res) => {
+router.post('/logout/', async (req, res) => {
     try {
         const { _id } = req.body;
         const jobSeeker = await JobSeeker.findById(_id);
