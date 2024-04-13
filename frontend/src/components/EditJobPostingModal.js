@@ -29,6 +29,10 @@ function EditJobPostingModal(props) {
         }
     }
 
+    function date(date) {
+        return new Date(date).toLocaleDateString();
+    }
+
     // Modal functions to show and hide the Modal
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -57,7 +61,7 @@ function EditJobPostingModal(props) {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formJobTitle">
-                            <Form.Label>Job Title *</Form.Label>
+                            <Form.Label>Job Title</Form.Label>
                             <Form.Control
                                 type="text"
                                 placeholder="Enter job title"
@@ -69,7 +73,7 @@ function EditJobPostingModal(props) {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formLocation">
-                            <Form.Label>Location *</Form.Label>
+                            <Form.Label>Location</Form.Label>
                             <Form.Select
                                 value={jobPost.location}
                                 onChange={(e) =>
@@ -96,26 +100,14 @@ function EditJobPostingModal(props) {
                                 <option value="Internship">Internship</option>
                             </Form.Select>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formPostingDate">
-                            <Form.Label>Posting Date *</Form.Label>
-                            <Form.Control
-                                type="date"
-                                value={jobPost.postingDate}
-                                onChange={(e) =>
-                                    setJobPost({ ...jobPost, postingDate: e.target.value })
-                                }
-                                required
-                            />
-                        </Form.Group>
                         <Form.Group className="mb-3" controlId="formExpirationDate">
-                            <Form.Label>Expiration Date *</Form.Label>
+                            <Form.Label>Expiration Date -  Current Value: {date(jobPost.expirationDate)}</Form.Label>
                             <Form.Control
                                 type="date"
                                 value={jobPost.expirationDate}
                                 onChange={(e) =>
                                     setJobPost({ ...jobPost, expirationDate: e.target.value })
                                 }
-                                required
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formJobDescription">

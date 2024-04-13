@@ -132,13 +132,14 @@ function NewJobPosting() {
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formPostingDate">
-                            <Form.Label>Posting Date</Form.Label>
+                            <Form.Label>Posting Date  *</Form.Label>
                             <Form.Control
                                 type="date"
                                 value={postingDate}
                                 onChange={(e) =>
                                     setJobPost({ ...jobPost, postingDate: e.target.value })
                                 }
+                                required
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formExpirationDate">

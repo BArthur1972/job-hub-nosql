@@ -76,7 +76,6 @@ router.post("/create", async (req, res) => {
 		}
 
 		const companyName = await Company.findCompanyNameById(companyID);
-		console.log(companyName);
 		const jobListing = new JobListing({ jobID, jobTitle, companyID, companyName, location, postingDate, employmentType, skillsRequired, experienceRequired, qualificationsRequired, expirationDate, salary, jobDescription, recruiterID });
 		await jobListing.save();
 		res.status(200).send(jobListing);
@@ -88,9 +87,7 @@ router.post("/create", async (req, res) => {
 
 // Get job listings by recruiter id
 router.get("/recruiter/:recruiterID", async (req, res) => {
-	console.log("Getting job listings by recruiter id");
 	try {
-		console.log(req.params.recruiterID)
 		const { recruiterID } = req.params;
 		const jobListings = await JobListing.find(
 			{ recruiterID: recruiterID }
@@ -106,7 +103,8 @@ router.get("/recruiter/:recruiterID", async (req, res) => {
 // Update job listing by id
 router.put("/update/", async (req, res) => {
 	try {
-		await JobListing.updateJobListingById(req.body.jobID, req.body);
+		const { _id, jobID, jobTitle, location, employmentType, skillsRequired, experienceRequired, qualificationsRequired, expirationDate, salary, jobDescription } = req.body;
+		await JobListing.findByIdAndUpdate(_id, { jobTitle, location, employmentType, skillsRequired, experienceRequired, qualificationsRequired, expirationDate, salary, jobDescription }, { new: true });
 		res.status(200).send({ message: "Job listing updated successfully" });
 	} catch (err) {
 		console.log("Error updating job listing by id: ", err);
@@ -117,8 +115,8 @@ router.put("/update/", async (req, res) => {
 // Delete job listing by id
 router.delete("/delete/", async (req, res) => {
 	try {
-		const { jobID, recruiterID } = req.body;
-		await JobListing.deleteJobListingById(jobID, recruiterID);
+		const { _id } = req.body;
+		await JobListing.findByIdAndDelete(_id);
 		res.status(200).send({ message: "Job listing deleted successfully" });
 	} catch (err) {
 		console.log("Error deleting job listing by id: ", err);

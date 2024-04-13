@@ -33,7 +33,7 @@ const JobListingSchema = new mongoose.Schema({
     },
     postingDate: {
         type: Date,
-        default: Date.now,
+        default: Date.now(),
     },
     salary: {
         type: String,
