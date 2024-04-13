@@ -60,10 +60,10 @@ const ApplicantCard = ({
 						<Card.Title className={`${styles.name} text-truncate`}>
 							{name}
 						</Card.Title>
-						<Card.Text className={styles.jobID}>Job ID: {jobID}</Card.Text>
-						<Card.Text className={styles.jobTitle}>{jobTitle}</Card.Text>
-						<Card.Text className={styles.location}>{location}</Card.Text>
-						<Card.Text className={styles.email}>{email}</Card.Text>
+						<Card.Text className={styles.jobID}>Job ID: <span>{jobID} </span></Card.Text>
+						<Card.Text className={styles.jobTitle}>Job Title: <span>{jobTitle}</span></Card.Text>
+						<Card.Text className={styles.location}>Location: <span>{location}</span></Card.Text>
+						<Card.Text className={styles.email}>Applicant's Email: <span>{email}</span></Card.Text>
 					</div>
 				</div>
 				<div className="d-flex align-items-center">
