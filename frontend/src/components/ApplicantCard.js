@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Card, Form, Button } from "react-bootstrap";
+import defaultProfilePicture from "../assets/defaultProfilePic.jpg";
 import ProfileModal from "./ProfileModal";
 import {
 	FaFileAlt,
@@ -54,7 +55,7 @@ const ApplicantCard = ({
 		<Card className={`${styles.card} mb-4`}>
 			<Card.Body className="d-flex justify-content-between align-items-center">
 				<div className="d-flex align-items-center">
-					<img className="me-4" style={{width: "70px", height: "70px", borderRadius: "50%"}} src={profilePicture} alt="" />
+					<img className="me-4" style={{width: "70px", height: "70px", borderRadius: "50%"}} src={profilePicture !== "" ? profilePicture : defaultProfilePicture} alt="" />
 					<div>
 						<Card.Title className={`${styles.name} text-truncate`}>
 							{name}
