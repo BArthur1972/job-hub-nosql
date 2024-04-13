@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Col, Form } from "react-bootstrap";
 import JobPost from "../components/JobPost";
 import { useSelector } from "react-redux";
 import { useGetJobListingsByRecruiterIdMutation } from "../services/appApi";
@@ -14,6 +14,11 @@ function JobPostings() {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  // Filter the job listings based on the search term
+  const filteredJobListings = jobListings.filter((listing) =>
+    listing.jobTitle.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Fetch joblistings when the component mounts
 	useEffect(() => {
@@ -31,7 +36,7 @@ function JobPostings() {
           Your Job Postings
         </h3>
         <h5 className="text-black font-semibold mb-4">
-          {jobListings.length} Total Job Postings
+          {filteredJobListings.length} Total Job Postings
         </h5>
         <Form className="mb-4 d-flex justify-content-between">
           <Form.Group className="flex-grow-1 me-4">
@@ -43,8 +48,8 @@ function JobPostings() {
             />
           </Form.Group>
         </Form>
-        {jobListings.length > 0 ? (
-          jobListings.map((listing, index) => (
+        {filteredJobListings.length > 0 ? (
+          filteredJobListings.map((listing, index) => (
             <JobPost key={index} jobListing={listing}/>
           ))
         ) : (

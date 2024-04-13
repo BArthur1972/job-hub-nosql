@@ -15,7 +15,7 @@ function DeleteJobPostingModal(props) {
     async function handleDelete(e) {
         e.preventDefault();
 
-        await deleteJobListingById({jobID: props.jobListing.jobID, recruiterID: user.recruiterID}).then((response) => {
+        await deleteJobListingById({_id: props.jobListing._id}).then((response) => {
             if (response.data) {
                 console.log(response.data.message);
                 alert(response.data.message);
