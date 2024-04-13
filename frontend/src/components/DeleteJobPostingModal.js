@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
 import { useDeleteJobListingByIdMutation } from '../services/appApi';
 
 function DeleteJobPostingModal(props) {
-    const { user } = useSelector((state) => state.user);
     const [show, setShow] = useState(false);
     const [deleteJobListingById] = useDeleteJobListingByIdMutation();
 

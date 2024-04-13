@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { Container, Row, Col, Form } from 'react-bootstrap';
+import { Container, Col, Form } from 'react-bootstrap';
 import ApplicantCard from '../components/ApplicantCard';
 import { useSelector } from 'react-redux';
 import { useGetApplicantsByRecruiterIdMutation } from '../services/appApi';
@@ -30,11 +30,11 @@ function ApplicantListPage() {
 
 	// Fetch applicants when the component mounts
 	useEffect(() => {
-		getApplicantsByRecruiterId(user.recruiterID)
+		getApplicantsByRecruiterId(user._id)
 			.then((response) => {
 				setApplicants(response.data);
 			});
-	}, [getApplicantsByRecruiterId, user.recruiterID]);
+	}, [getApplicantsByRecruiterId, user._id]);
 
 	return (
 		<Container fluid className="h-100 p-0 d-flex justify-content-center align-items-center">
