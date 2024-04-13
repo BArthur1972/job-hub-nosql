@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { Card, Form, Button } from "react-bootstrap";
 import ProfileModal from "./ProfileModal";
 import {
-	FaUserCircle,
 	FaFileAlt,
 	FaPen,
 	FaCheckCircle,
 	FaTimesCircle,
 } from "react-icons/fa";
-import { useUpdateApplicationMutation } from "../services/appApi";
+import { useUpdateApplicantStatusMutation } from "../services/appApi";
 import styles from "./styles/applicantCard.module.css";
 
 const statusColors = {
@@ -23,17 +22,18 @@ const ApplicantCard = ({
 	jobID,
 	name,
 	jobTitle,
+	profilePicture,
 	status,
 	location,
 	email,
 	onUpdateStatus
 }) => {
 
-	const [updateApplication] = useUpdateApplicationMutation();
+	const [updateApplicantStatus] = useUpdateApplicantStatusMutation();
 	const [statusChanged, setStatusChanged] = useState(false);
 
 	const handleUpdateApplicantStatus = () => {
-		updateApplication({ seekerID, jobID, status })
+		updateApplicantStatus({ seekerID, jobID, status })
 			.then((response) => {
 				console.log(response.data);
 				alert("Job application status updated to " + status + " successfully!");
@@ -54,7 +54,7 @@ const ApplicantCard = ({
 		<Card className={`${styles.card} mb-4`}>
 			<Card.Body className="d-flex justify-content-between align-items-center">
 				<div className="d-flex align-items-center">
-					<FaUserCircle size={48} className={`${styles.userIcon} me-4`} />
+					<img className="me-4" style={{width: "70px", height: "70px", borderRadius: "50%"}} src={profilePicture} alt="" />
 					<div>
 						<Card.Title className={`${styles.name} text-truncate`}>
 							{name}

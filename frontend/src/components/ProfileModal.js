@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "./styles/applicantCard.module.css";
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Image } from 'react-bootstrap';
 import { Col, Row } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useGetJobSeekerByIdMutation } from '../services/appApi';
@@ -8,7 +8,10 @@ import "./styles/ProfileModal.css";
 
 function ProfileModal(props) {
     const [show, setShow] = React.useState(false);
-    const [jobSeeker, setJobSeeker] = useState([]);
+    const [jobSeeker, setJobSeeker] = useState({});
+    const [skills, setSkills] = useState([]);
+    const [education, setJobSeekerEducation] = useState([]);
+    const [experience, setJobSeekerExperience] = useState([]);
 
     const [getJobSeekerById] = useGetJobSeekerByIdMutation();
 
@@ -16,12 +19,15 @@ function ProfileModal(props) {
     useEffect(() => {
         const fetchJobSeeker = async () => {
             await getJobSeekerById(props.seekerID).then((response) => {
-                setJobSeeker(response.data[0]);
+                setJobSeeker(response.data);
+                setSkills(response.data.skills);
+                setJobSeekerEducation(response.data.education);
+                setJobSeekerExperience(response.data.experience);
             });
-        } 
+        }
 
         fetchJobSeeker();
-    }, [getJobSeekerById, props.seekerID]);
+    }, [getJobSeekerById, setJobSeeker, props.seekerID]);
 
     const formatDateAsMonthDayYear = (date) => {
         const formattedDate = new Date(date);
@@ -48,6 +54,9 @@ function ProfileModal(props) {
                     <Modal.Title>Applicant Profile</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div className='profile_picture_container'>
+                        <Image src={jobSeeker.profilePicture} roundedCircle className='profile_picture' />
+                    </div>
                     <Row className='jobseeker_info'>
                         <Col md={4} className='jobseeker_info_box'>
                             {/* Box displaying the job seeker's name, email, contact number, bio */}
@@ -69,8 +78,8 @@ function ProfileModal(props) {
                             <div className='skills_box'>
                                 <h4>Skills</h4>
                                 <ul>
-                                    {jobSeeker.skills.map((skill, index) => (
-                                        <li key={index}>{skill.skill}</li>
+                                    {skills.map((skill, index) => (
+                                        <li key={index}>{skill}</li>
                                     ))}
                                 </ul>
                             </div>
@@ -78,7 +87,7 @@ function ProfileModal(props) {
                             {/* Box displaying the job seeker's education */}
                             <div className='education_box'>
                                 <h4>Education</h4>
-                                {jobSeeker.education.map((education, index) => (
+                                {education.map((education, index) => (
                                     <div key={index} className='education_item'>
                                         <ul>
                                             <li>{education.institution}</li>
@@ -94,7 +103,7 @@ function ProfileModal(props) {
                             <div className='experience_box'>
                                 <h4>Experience</h4>
                                 <div className='experience_item'>
-                                    {jobSeeker.experience.map((experience, index) => (
+                                    {experience.map((experience, index) => (
                                         <div key={index} className='experience_item'>
                                             <ul>
                                                 <li>{experience.role}</li>

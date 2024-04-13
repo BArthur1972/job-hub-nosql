@@ -160,7 +160,7 @@ const appApi = createApi({
         }),
 
         // update an application
-        updateApplication: builder.mutation({
+        updateApplicantStatus: builder.mutation({
             query: (payload) => ({
                 url: "/applicant/update",
                 method: "PUT",
@@ -168,8 +168,8 @@ const appApi = createApi({
             }),
         }),
 
-        // delete an application
-        deleteApplication: builder.mutation({
+        // Delete applicant
+        deleteApplicant: builder.mutation({
             query: (payload) => ({
                 url: "/applicant/delete",
                 method: "DELETE",
@@ -180,7 +180,7 @@ const appApi = createApi({
         // Get Applicants for all job listings by a recruiter
         getApplicantsByRecruiterId: builder.mutation({
             query: (id) => ({
-                url: `/applicant/applicants/${id}`,
+                url: `/applicant/getAll/${id}`,
                 method: 'GET',
             }),
         }),
@@ -246,8 +246,8 @@ export const {
     useGetApplicationsByJobListingIdMutation,
     useGetApplicationsByStatusMutation,
     useCreateApplicationMutation,
-    useUpdateApplicationMutation,
-    useDeleteApplicationMutation,
+    useUpdateApplicantStatusMutation,
+    useDeleteApplicantMutation,
     useGetApplicantsByRecruiterIdMutation,
     useGetJobListingsByRecruiterIdMutation,
     useUpdateJobListingByIdMutation,

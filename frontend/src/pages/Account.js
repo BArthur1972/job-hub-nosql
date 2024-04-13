@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Container, Row } from 'react-bootstrap';
 import './styles/Account.css';
 import defaultProfilePic from '../assets/defaultProfilePic.jpg';
@@ -18,7 +18,7 @@ function UserInfo({ user }) {
 			<div className="account__user-image">
 				<img
 					alt=""
-					src={user ? user.profilePicture : defaultProfilePic}
+					src={user && user.profilePicture !== "" ? user.profilePicture : defaultProfilePic}
 					className="account__user-image-preview"
 				/>
 				<div className="account__user-image-change">
