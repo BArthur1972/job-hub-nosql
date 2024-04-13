@@ -5,6 +5,7 @@ import JobDetailsModal from "../components/JobDetailsModal";
 import { useCreateApplicationMutation } from "../services/appApi";
 import { useSelector } from "react-redux";
 
+
 const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
 
 const Job = ({ jobID, companyName, jobTitle, experienceLevels, locations, postedDate, jobType, skills, salary, description }) => {
@@ -20,12 +21,16 @@ const Job = ({ jobID, companyName, jobTitle, experienceLevels, locations, posted
 
     const handleApply = async () => {
         const application = {
-            seekerID: user.seekerID,
+            seekerID: user._id,
             jobID: jobID,
             status: "Applied",
             dateApplied: currentDate,
         };
+        console.log(user._id, "user._id");
+        console.log(jobID, "jobID");
+
         await createApplication(application).then((response) => {
+            console.log(response, "response");
             if (response && response.data) {
                 console.log("Application submitted successfully");
                 console.log(response.data);

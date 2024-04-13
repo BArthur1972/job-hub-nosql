@@ -32,11 +32,12 @@ const AllJobs = () => {
 			setError(null);
 			try {
 				const response = await getAllJobListing();
+				console.log(response.data);
 				if (response.data) {
 					const transformedJobs = await Promise.all(
 						response.data.map(async (job) => ({
-							jobID: job.jobID,
-							companyName: await fetchCompanyName(job.companyID),
+							jobID: job._id,
+							companyName: job.companyName,
 							jobTitle: job.jobTitle,
 							experienceLevels: job.experienceRequired,
 							locations: job.location,
