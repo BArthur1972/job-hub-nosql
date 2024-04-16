@@ -14,7 +14,7 @@ import {
 } from "react-icons/fa";
 
 function ProfileModal(props) {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
   const [jobSeeker, setJobSeeker] = useState({});
   const [skills, setSkills] = useState([]);
   const [education, setJobSeekerEducation] = useState([]);
