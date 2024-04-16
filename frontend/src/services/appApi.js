@@ -168,8 +168,8 @@ const appApi = createApi({
             }),
         }),
 
-        // Delete applicant
-        deleteApplicant: builder.mutation({
+        // Withdraw an application
+        deleteApplication: builder.mutation({
             query: (payload) => ({
                 url: "/applicant/delete",
                 method: "DELETE",
@@ -247,7 +247,7 @@ export const {
     useGetApplicationsByStatusMutation,
     useCreateApplicationMutation,
     useUpdateApplicantStatusMutation,
-    useDeleteApplicantMutation,
+    useDeleteApplicationMutation,
     useGetApplicantsByRecruiterIdMutation,
     useGetJobListingsByRecruiterIdMutation,
     useUpdateJobListingByIdMutation,

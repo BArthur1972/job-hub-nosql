@@ -28,11 +28,13 @@ function JobApplication() {
         if (response.data) {
           const transformedApplications = await Promise.all(
             response.data.map(async (job) => ({
-              id: job.jobID,
+              _id: job._id,
+              jobID: job.jobID,
               companyName: job.companyName,
               jobTitle: job.jobTitle,
               status: job.applicants[0].status,
               location: job.location,
+              dateApplied: job.applicants[0].dateApplied,
             }))
           );
           setApplications(transformedApplications);
