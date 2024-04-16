@@ -88,7 +88,7 @@ RecruiterSchema.statics.findByCredentials = async (email, password) => {
 // Generate an auth token for the recruiter
 RecruiterSchema.methods.generateAuthToken = async function () {
     const recruiter = this;
-    const token = jwt.sign({ _id: recruiter._id }, process.env.JWT_SECRET, { expiresIn: '7 days' });
+    const token = jwt.sign({ _id: recruiter._id }, process.env.JWT_SECRET);
     recruiter.token = token;
     await recruiter.save();
     return token;

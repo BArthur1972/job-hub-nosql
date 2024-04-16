@@ -124,7 +124,7 @@ function ProfileModal(props) {
                     <p className={styles.school}>{edu.discipline}</p>
                     <p className={styles.school}>{edu.degree}</p>
                     <p className={styles.dates}>
-                      {edu.startYear} - {edu.endYear}
+                      {edu.startYear} - {edu.endYear ? edu.endYear : "Now"}
                     </p>
                   </Col>
                 </Row>
@@ -155,7 +155,7 @@ function ProfileModal(props) {
                   <Col md={4} className="d-flex flex-column align-items-end">
                     <p className={styles.dates}>
                       {formatDateAsMonthDayYear(exp.startDate)} -{" "}
-                      {formatDateAsMonthDayYear(exp.endDate)}
+                      {exp.endDate ? formatDateAsMonthDayYear(exp.endDate): "Now"}
                     </p>
                   </Col>
                 </Row>

@@ -76,7 +76,7 @@ function JobSeekerInfo({ skillsList, educationList, experienceList }) {
 							<li className="account__education-degree">{education.degree}</li>
 							<li className="account__education-discipline">{education.discipline}</li>
 							<li className="account__education-dates">
-								{education.startYear} to {education.endYear}
+								{education.startYear} to {education.endYear ? education.endYear : "Now"}
 							</li>
 						</ul>
 					</div>
@@ -90,7 +90,7 @@ function JobSeekerInfo({ skillsList, educationList, experienceList }) {
 							<li className="account__experience-role">{experience.role}</li>
 							<li className="account__experience-company">{experience.company}</li>
 							<li className="account__experience-dates">
-								{formatDateAsMonthDayYear(experience.startDate)} to {experience.endDate !== 'Present' ? formatDateAsMonthDayYear(experience.endDate) : experience.endDate}
+								{formatDateAsMonthDayYear(experience.startDate)} to {experience.endDate ? formatDateAsMonthDayYear(experience.endDate) : "Now"}
 							</li>
 						</ul>
 					</div>
