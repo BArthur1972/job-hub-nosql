@@ -3,6 +3,7 @@ import { Container, Row } from 'react-bootstrap';
 import './styles/Account.css';
 import defaultProfilePic from '../assets/defaultProfilePic.jpg';
 import { useSelector } from 'react-redux';
+import RecruiterAnalytics from '../components/RecruiterAnalytics';
 
 function AccountHeader({ userName }) {
 	return (
@@ -121,6 +122,14 @@ function Account() {
 							educationList={user.education}
 							experienceList={user.experience}
 						/>
+					</Row>
+				</>
+			)}
+			{userRole === 'recruiter' && (
+				<>
+					<div className="account__divider" />
+					<Row>
+						<RecruiterAnalytics />
 					</Row>
 				</>
 			)}

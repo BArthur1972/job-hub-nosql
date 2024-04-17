@@ -222,7 +222,42 @@ router.get("/", async (req, res) => {
     } catch (error) {
       res.status(500).send('Error withdrawing application: ' + error.message);
     }
-  }
-);
+  });
+
+  // Get applicant status counts for all job listings by a recruiter
+  router.get("/statusCounts/:recruiterID", async (req, res) => {
+    try {
+      const { recruiterID } = req.params;
+      const jobListings = await JobListing.find({ recruiterID });
+      let statusCounts = {};
+      jobListings.forEach((jobListing) => {
+        jobListing.applicants.forEach((applicant) => {
+          const status = applicant.status;
+          statusCounts[status] = statusCounts[status] ? statusCounts[status] + 1 : 1;
+        });
+      });
+      res.status(200).send(statusCounts);
+    } catch (err) {
+      console.log("Error getting applicant status counts for all job listings by a recruiter: ", err);
+      res.status(500).send({ error: err });
+    }
+  });
+
+  // Get employment type counts for all job listings by a recruiter
+router.get("/employmentTypeCounts/:recruiterID", async (req, res) => {
+    try {
+        const { recruiterID } = req.params;
+        const jobListings = await JobListing.find({ recruiterID });
+        let employmentTypeCounts = {};
+        jobListings.forEach((jobListing) => {
+            const employmentType = jobListing.employmentType;
+            employmentTypeCounts[employmentType] = employmentTypeCounts[employmentType] ? employmentTypeCounts[employmentType] + 1 : 1;
+        });
+        res.status(200).send(employmentTypeCounts);
+    } catch (err) {
+        console.log("Error getting employment type counts for all job listings by a recruiter: ", err);
+        res.status(500).send({ error: err });
+    }
+});
 
 module.exports = router;
