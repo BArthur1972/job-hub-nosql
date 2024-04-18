@@ -16,7 +16,6 @@ CompanySchema.statics.findCompanyIdByName = async (companyName) => {
 	if (!company) {
 		throw new Error('Company not found');
 	}
-
 	return company._id;
 }
 
