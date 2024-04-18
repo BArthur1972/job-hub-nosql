@@ -14,7 +14,7 @@ import {
 } from "react-icons/fa";
 
 function ProfileModal(props) {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
   const [jobSeeker, setJobSeeker] = useState({});
   const [skills, setSkills] = useState([]);
   const [education, setJobSeekerEducation] = useState([]);
@@ -113,8 +113,8 @@ function ProfileModal(props) {
           <Card className="bg-light border-0 shadow p-3 my-3">
             <h4 className="mb-3">Education</h4>
             <div>
-              {education.map((edu) => (
-                <Row key={edu.id} className={`${styles.educationItem} mb-3`}>
+              {education.map((edu, idx) => (
+                <Row key={idx} className={`${styles.educationItem} mb-3`}>
                   <Col md={4}>
                     <h5 className={styles.degree}>{edu.degree}</h5>
                   </Col>
@@ -124,7 +124,7 @@ function ProfileModal(props) {
                     <p className={styles.school}>{edu.discipline}</p>
                     <p className={styles.school}>{edu.degree}</p>
                     <p className={styles.dates}>
-                      {edu.startYear} - {edu.endYear}
+                      {edu.startYear} - {edu.endYear ? edu.endYear : "Now"}
                     </p>
                   </Col>
                 </Row>
@@ -135,8 +135,8 @@ function ProfileModal(props) {
           <Card className="bg-light border-0 shadow p-3 my-3">
             <h4 className="mb-3">Skills</h4>
             <div className="d-flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <Badge key={skill} pill className={styles.chip}>
+              {skills.map((skill, idx) => (
+                <Badge key={idx} pill className={styles.chip}>
                   {skill}
                 </Badge>
               ))}
@@ -146,8 +146,8 @@ function ProfileModal(props) {
           <Card className="bg-light border-0 shadow p-3">
             <h4 className="mb-3">Experience</h4>
             <div>
-              {experience.map((exp) => (
-                <Row key={exp.id} className={`${styles.experienceItem} mb-3`}>
+              {experience.map((exp, idx) => (
+                <Row key={idx} className={`${styles.experienceItem} mb-3`}>
                   <Col md={8}>
                     <h5 className={styles.role}>{exp.role}</h5>
                     <p className={styles.company}>{exp.company}</p>
@@ -155,7 +155,7 @@ function ProfileModal(props) {
                   <Col md={4} className="d-flex flex-column align-items-end">
                     <p className={styles.dates}>
                       {formatDateAsMonthDayYear(exp.startDate)} -{" "}
-                      {formatDateAsMonthDayYear(exp.endDate)}
+                      {exp.endDate ? formatDateAsMonthDayYear(exp.endDate): "Now"}
                     </p>
                   </Col>
                 </Row>
