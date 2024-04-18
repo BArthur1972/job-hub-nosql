@@ -35,15 +35,18 @@ function JobSeekerAnalytics() {
     };
 
     const fetchapplicationStatusCount = () => {
-      const counts = {applicationStatusCount };
+      const counts = { applicationStatusCount };
       applications.forEach((application) => {
-        counts[application.applicants[0].status] = (counts[application.applicants[0].status] || 0) + 1;
+        if (application.applicants.length > 0) {
+          counts[application.applicants[0].status] =
+            (counts[application.applicants[0].status] || 0) + 1;
+        }
       });
       setapplicationStatusCount(counts);
     };
 
     const fetchEmploymentTypeCounts = () => {
-      const counts = {employmentTypeCounts };
+      const counts = { employmentTypeCounts };
       applications.forEach((application) => {
         counts[application.employmentType] =
           (counts[application.employmentType] || 0) + 1;
@@ -86,7 +89,6 @@ function JobSeekerAnalytics() {
   const checkForData = () => {
     return applicationStatusData.length > 0 && employmentTypeData.length > 0;
   };
-
 
   return (
     checkForData() && (
