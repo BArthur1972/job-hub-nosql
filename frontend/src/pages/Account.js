@@ -4,6 +4,7 @@ import './styles/Account.css';
 import defaultProfilePic from '../assets/defaultProfilePic.jpg';
 import { useSelector } from 'react-redux';
 import RecruiterAnalytics from '../components/RecruiterAnalytics';
+import JobSeekerAnalytics from '../components/JobSeekerAnalytics';
 
 function AccountHeader({ userName }) {
 	return (
@@ -122,6 +123,9 @@ function Account() {
 							educationList={user.education}
 							experienceList={user.experience}
 						/>
+					</Row>
+					<Row>
+					<JobSeekerAnalytics />
 					</Row>
 				</>
 			)}
