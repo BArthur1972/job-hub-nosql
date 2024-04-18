@@ -125,7 +125,7 @@ router.get("/", async (req, res) => {
       // If an error occurs, send a server error status code and message
       res
         .status(500)
-        .send("Error fetching job listings for seeker: " + error.message);
+        .send("Error fetching job listings for seeker: " + error.message + " " + req.params.seekerID);
     }
   });
   

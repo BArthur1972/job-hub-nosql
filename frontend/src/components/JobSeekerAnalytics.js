@@ -9,11 +9,11 @@ import {
 } from "recharts";
 import { Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useGetAllApplicationsMutation } from "../services/appApi";
+import { useGetApplicationsByJobSeekerIdMutation } from "../services/appApi";
 
 function JobSeekerAnalytics() {
-  const user = useSelector((state) => state.user);
-  const [getAllApplications] = useGetAllApplicationsMutation();
+  const { user } = useSelector((state) => state.user);
+  const [getAllJobApplicationById] = useGetApplicationsByJobSeekerIdMutation();
   const [applications, setApplications] = useState([]);
   const [applicationStatusCount, setapplicationStatusCount] = useState({
     Applied: 0,
@@ -30,40 +30,36 @@ function JobSeekerAnalytics() {
 
   useEffect(() => {
     const fetchApplications = async () => {
-      const response = await getAllApplications(user?._id);
-      setApplications(response.data);
-    };
+      if (user && user._id) {
+        const response = await getAllJobApplicationById(user._id);
+        setApplications(response.data);
 
-    const fetchapplicationStatusCount = () => {
-      const counts = { applicationStatusCount };
-      applications.forEach((application) => {
-        if (application.applicants.length > 0) {
-          counts[application.applicants[0].status] =
-            (counts[application.applicants[0].status] || 0) + 1;
-        }
-      });
-      setapplicationStatusCount(counts);
-    };
+        const counts = { Applied: 0, Interviewing: 0, Hired: 0, Rejected: 0 };
+        const employmentTypeCounts = {
+          "Full-Time": 0,
+          "Part-Time": 0,
+          Contract: 0,
+          Internship: 0,
+        };
 
-    const fetchEmploymentTypeCounts = () => {
-      const counts = { employmentTypeCounts };
-      applications.forEach((application) => {
-        counts[application.employmentType] =
-          (counts[application.employmentType] || 0) + 1;
-      });
-      setEmploymentTypeCounts(counts);
+        response.data.forEach((application) => {
+          if (application.applicants.length > 0) {
+            counts[application.applicants[0].status] =
+              (counts[application.applicants[0].status] || 0) + 1;
+            employmentTypeCounts[application.employmentType] =
+              (employmentTypeCounts[application.employmentType] || 0) + 1;
+          }
+        });
+
+        setapplicationStatusCount(counts);
+        setEmploymentTypeCounts(employmentTypeCounts);
+      } else {
+        console.error("Error fetching job listings for seeker: user._id is undefined");
+      }
     };
 
     fetchApplications();
-    fetchapplicationStatusCount();
-    fetchEmploymentTypeCounts();
-  }, [
-    getAllApplications,
-    user?._id,
-    applications,
-    applicationStatusCount,
-    employmentTypeCounts,
-  ]);
+  }, [getAllJobApplicationById, user._id, user]);
 
   const applicationStatusData = Object.entries(applicationStatusCount)
     .filter(([_, value]) => value > 0)
